@@ -1,0 +1,47 @@
+SUMMARY="Stardew Valley (user-supplied proprietary game files)"
+DESCRIPTION="A launcher package for Stardew Valley on Haiku using Mono/FNA. Game data must be provided by the user."
+HOMEPAGE="https://www.stardewvalley.net/"
+COPYRIGHT="© ConcernedApe"
+LICENSE="Proprietary"
+REVISION="1"
+SOURCE_URI=""
+CHECKSUM_SHA256=""
+ARCHITECTURES="x86_64"
+DISABLE_SOURCE_PACKAGE="yes"
+
+SOURCE_DIR="."
+
+BUILD_PREREQUIRES="
+    haikuporter
+"
+
+BUILD_REQUIRES="
+    mono
+"
+
+REQUIRES="
+    mono
+"
+
+INSTALL()
+{
+    # Install Stardew Valley files
+    mkdir -p $appsDir/StardewValley
+    cp -r $sourceDir/data $appsDir/StardewValley/
+
+    # Install launcher
+    mkdir -p $binDir
+    cat > $binDir/stardewvalley <<EOF
+#!/bin/sh
+cd /boot/system/apps/StardewValley/data
+
+# Stardew Valley uses StardewValley.exe with Mono
+if [ -f StardewValley.exe ]; then
+    mono StardewValley.exe
+else
+    echo "StardewValley.exe not found in data/ folder."
+fi
+EOF
+
+    chmod +x $binDir/stardewvalley
+}
