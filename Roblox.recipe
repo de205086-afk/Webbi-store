@@ -1,0 +1,40 @@
+SUMMARY="Roblox (user-supplied proprietary client)"
+DESCRIPTION="A launcher package for Roblox on Haiku using Wine. Game files must be provided by the user."
+HOMEPAGE="https://www.roblox.com/"
+COPYRIGHT="© Roblox Corporation"
+LICENSE="Proprietary"
+REVISION="1"
+SOURCE_URI=""
+CHECKSUM_SHA256=""
+ARCHITECTURES="x86_64"
+DISABLE_SOURCE_PACKAGE="yes"
+
+SOURCE_DIR="."
+
+BUILD_PREREQUIRES="
+    haikuporter
+"
+
+BUILD_REQUIRES="
+    wine
+"
+
+REQUIRES="
+    wine
+"
+
+INSTALL()
+{
+    # Install Roblox files
+    mkdir -p $appsDir/Roblox
+    cp -r $sourceDir/data $appsDir/Roblox/
+
+    # Install launcher
+    mkdir -p $binDir
+    cat > $binDir/roblox <<EOF
+#!/bin/sh
+cd /boot/system/apps/Roblox/data
+wine RobloxPlayerLauncher.exe
+EOF
+    chmod +x $binDir/roblox
+}
